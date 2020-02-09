@@ -5,7 +5,7 @@ LINDERA_UNIDIC_DIR ?= ./lindera-unidic
 VERSION ?=
 
 ifeq ($(VERSION),)
-  VERSION = $(shell cargo metadata --no-deps --format-version=1 | jq -r '.packages[] | select(.name=="lindera-unidic") | .version')
+  VERSION = $(shell cargo metadata --no-deps --format-version=1 | jq -r '.packages[] | select(.name=="lindera-unidic-builder") | .version')
 endif
 
 clean:

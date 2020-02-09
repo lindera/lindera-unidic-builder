@@ -1,0 +1,12 @@
+.vscode
+.idea
+.DS_Store
+
+target
+perf.data*
+
+bin
+unidic-mecab-*_src
+unidic-mecab-*_src.zip
+lindera-unidic
+lindera-unidic-*.tar.bz2

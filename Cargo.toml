@@ -1,0 +1,25 @@
+[package]
+name = "lindera-unidic-builder"
+version = "0.1.0"
+authors = ["Minoru Osuka <minoru.osuka@gmail.com>"]
+edition = "2018"
+description = "A Japanese dictionary based on UniDic for Lindera."
+homepage = "https://github.com/bayard-search/lindera-unidic"
+repository = "https://github.com/bayard-search/lindera-unidic"
+readme = "README.md"
+keywords = ["japanese", "morphological", "analyzer", "dictionary", "unidic"]
+categories = ["text-processing"]
+license = "MIT"
+exclude = ["mecab-unidic"]
+
+[dependencies]
+bincode = "1.2.1"
+byteorder = "1.3.2"
+clap = "2.33.0"
+encoding = "0.2.33"
+lindera-core = "0.1.1"
+tantivy-fst = "0.2.1"
+
+[[bin]]
+name = "lindera-unidic"
+path = "src/main.rs"

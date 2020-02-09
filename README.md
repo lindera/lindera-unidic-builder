@@ -4,7 +4,7 @@
 
 A Japanese dictionary builder based on UniDic for [Lindera](https://github.com/bayard-search/lindera). This project fork from fulmicoton's [kuromoji-rs](https://github.com/fulmicoton/kuromoji-rs).
 
-## Building Lindera-UniDic
+## Building Lindera UniDic Builder
 
 ### Requirements
 

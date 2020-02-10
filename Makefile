@@ -1,6 +1,6 @@
 BIN_DIR ?= ./bin
-MECAB_UNIDIC_NAME ?= unidic-mecab-2.1.2_src
-MECAB_UNIDIC_DIR ?= ./${MECAB_UNIDIC_NAME}
+SOURCE_URL ?= https://ja.osdn.net/frs/redir.php?m=ymu&f=unidic/58338/unidic-mecab-2.1.2_src.zip
+MECAB_UNIDIC_DIR ?= ./mecab-unidic
 LINDERA_UNIDIC_DIR ?= ./lindera-unidic
 VERSION ?=
 
@@ -12,17 +12,20 @@ clean:
 	rm -rf $(BIN_DIR)
 	rm -rf $(LINDERA_UNIDIC_DIR)
 	rm -rf lindera-unidic-*.tar.bz2
+	rm -rf $(MECAB_UNIDIC_DIR)
+	rm ./unidic-mecab_src.zip
 	cargo clean
 
 format:
 	cargo fmt
 
 mecab-unidic:
-ifeq ($(wildcard ./${MECAB_UNIDIC_NAME}.zip),)
-	curl -L "https://ja.osdn.net/frs/redir.php?m=ymu&f=unidic%2F58338%2F${MECAB_UNIDIC_NAME}.zip" > ./${MECAB_UNIDIC_NAME}.zip
+ifeq ($(wildcard ./unidic-mecab_src.zip),)
+	curl -L "$(SOURCE_URL)" > ./unidic-mecab.zip
 endif
-ifeq ($(wildcard ./${MECAB_UNIDIC_NAME}/*),)
-	unzip ./${MECAB_UNIDIC_NAME}.zip
+ifeq ($(wildcard ./$(MECAB_UNIDIC_DIR)/*),)
+	unzip ./unidic-mecab.zip
+	mv ./unidic-mecab-2.1.2_src $(MECAB_UNIDIC_DIR)
 endif
 
 build: mecab-unidic

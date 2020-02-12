@@ -1,4 +1,3 @@
-use std::{fs, u32};
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::Debug;
 use std::fs::File;
@@ -6,12 +5,13 @@ use std::io::{self, Read, Write};
 use std::num::ParseIntError;
 use std::path::Path;
 use std::str::FromStr;
+use std::{fs, u32};
 
 use bincode;
-use byteorder::{LittleEndian, WriteBytesExt};
 use byteorder::ByteOrder;
-use encoding::{DecoderTrap, Encoding};
+use byteorder::{LittleEndian, WriteBytesExt};
 use encoding::all::UTF_16LE;
+use encoding::{DecoderTrap, Encoding};
 use lindera_core::core::character_definition::{
     CategoryData, CategoryId, CharacterDefinitions, LookupTable,
 };

@@ -1,13 +1,14 @@
 [package]
 name = "lindera-unidic-builder"
 version = "0.2.0"
-authors = ["Minoru Osuka <minoru.osuka@gmail.com>"]
+authors = ["See AUTHORS file"]
 edition = "2018"
-description = "A Japanese dictionary builder based on UniDic for Lindera."
+description = "A Japanese morphological dictionary builder for UniDic."
+documentation = "https://docs.rs/lindera-unidic-builder"
 homepage = "https://github.com/bayard-search/lindera-unidic-builder"
 repository = "https://github.com/bayard-search/lindera-unidic-builder"
 readme = "README.md"
-keywords = ["japanese", "morphological", "analyzer", "dictionary", "unidic"]
+keywords = ["japanese", "morphological", "dictionary", "builder", "unidic"]
 categories = ["text-processing"]
 license = "MIT"
 

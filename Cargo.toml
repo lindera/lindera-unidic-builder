@@ -1,7 +1,10 @@
 [package]
 name = "lindera-unidic-builder"
 version = "0.2.0"
-authors = ["See AUTHORS file"]
+authors = [
+    "Paul Masurel <paul.masurel@gmail.com>",
+    "Minoru Osuka <minoru.osuka@gmail.com>"
+    ]
 edition = "2018"
 description = "A Japanese morphological dictionary builder for UniDic."
 documentation = "https://docs.rs/lindera-unidic-builder"

@@ -6,7 +6,5 @@ target
 perf.data*
 
 bin
-mecab-unidic
-unidic-mecab.zip
-lindera-unidic
-lindera-unidic-*.tar.bz2
+unidic-mecab-*
+lindera-unidic-*

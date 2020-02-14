@@ -1,7 +1,6 @@
 BIN_DIR ?= ./bin
-SOURCE_URL ?= https://ja.osdn.net/frs/redir.php?m=ymu&f=unidic/58338/unidic-mecab-2.1.2_src.zip
-MECAB_UNIDIC_DIR ?= ./mecab-unidic
-LINDERA_UNIDIC_DIR ?= ./lindera-unidic
+UNIDIC_VERSION ?= 2.1.2
+SOURCE_URL ?= https://unidic.ninjal.ac.jp/unidic_archive/cwj/$(UNIDIC_VERSION)/unidic-mecab-$(UNIDIC_VERSION)_src.zip
 VERSION ?=
 
 ifeq ($(VERSION),)
@@ -10,32 +9,31 @@ endif
 
 clean:
 	rm -rf $(BIN_DIR)
-	rm -rf $(LINDERA_UNIDIC_DIR)
-	rm -rf lindera-unidic-*.tar.bz2
-	rm -rf $(MECAB_UNIDIC_DIR)
-	rm ./unidic-mecab_src.zip
+	rm -rf ./lindera-unidic-*
+	rm -rf ./unidic-mecab-*
 	cargo clean
 
 format:
 	cargo fmt
 
-mecab-unidic:
-ifeq ($(wildcard ./unidic-mecab_src.zip),)
-	curl -L "$(SOURCE_URL)" > ./unidic-mecab.zip
-endif
-ifeq ($(wildcard ./$(MECAB_UNIDIC_DIR)/*),)
-	unzip ./unidic-mecab.zip
-	mv ./unidic-mecab-2.1.2_src $(MECAB_UNIDIC_DIR)
-endif
-
-build: mecab-unidic
+build:
 	cargo build --release
 	mkdir -p $(BIN_DIR)
 	cp -p ./target/release/lindera-unidic $(BIN_DIR)
 
-lindera-unidic: build
-	$(BIN_DIR)/lindera-unidic $(MECAB_UNIDIC_DIR) $(LINDERA_UNIDIC_DIR)
-	tar -cvjf ./lindera-unidic-$(VERSION).tar.bz2 $(LINDERA_UNIDIC_DIR)
+unidic-mecab-download:
+ifeq ($(wildcard ./unidic-mecab-$(UNIDIC_VERSION)_src.zip),)
+	curl -L -O "$(SOURCE_URL)"
+endif
+
+unidic-mecab-extract: unidic-mecab-download
+ifeq ($(wildcard ./unidic-mecab-$(UNIDIC_VERSION)_src/*),)
+	unzip ./unidic-mecab-$(UNIDIC_VERSION)_src.zip
+endif
+
+lindera-unidic: build unidic-mecab-extract
+	$(BIN_DIR)/lindera-unidic ./unidic-mecab-$(UNIDIC_VERSION)_src ./lindera-unidic-$(UNIDIC_VERSION)
+	tar -cvjf ./lindera-unidic-$(UNIDIC_VERSION).tar.bz2 ./lindera-unidic-$(UNIDIC_VERSION)
 
 test:
 	cargo test

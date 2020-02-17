@@ -1,6 +1,6 @@
 [package]
 name = "lindera-unidic-builder"
-version = "0.3.0"
+version = "0.3.1"
 authors = [
     "Paul Masurel <paul.masurel@gmail.com>",
     "Minoru Osuka <minoru.osuka@gmail.com>"
@@ -20,8 +20,8 @@ bincode = "1.2.1"
 byteorder = "1.3.2"
 clap = "2.33.0"
 encoding = "0.2.33"
-lindera-core = "0.3.0"
-tantivy-fst = "0.2.1"
+lindera-core = "0.3.1"
+lindera-fst = "0.1.0"
 
 [[bin]]
 name = "lindera-unidic"

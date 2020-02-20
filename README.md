@@ -34,6 +34,30 @@ Building a dictionary with `lindera-unidic` command:
 % ./bin/lindera-unidic ./unidic-mecab-2.1.2_src ./lindera-unidic-2.1.2
 ```
 
+## Dictionary format
+
+Refer to the [manual](ftp://ftp.jaist.ac.jp/pub/sourceforge.jp/unidic/57618/unidic-mecab.pdf) for details on the unidic-mecab dictionary format and part-of-speech tags.
+
+| Index | Name (Japanese) | Name (English) | Notes |
+| --- | --- | --- | --- |
+| 0 | 品詞大分類 | | |
+| 1 | 品詞中分類 | | |
+| 2 | 品詞小分類 | | |
+| 3 | 品詞細分類 | | |
+| 4 | 活用型 | | |
+| 5 | 活用形 | | |
+| 6 | 語彙素読み | | |
+| 7 | 語彙素（語彙素表記 + 語彙素細分類） | Lexeme | |
+| 8 | 書字形出現形 | | |
+| 9 | 発音形出現形 | | |
+| 10 | 書字形基本形 | | |
+| 11 | 発音形基本形 | | |
+| 12 | 語種 | | |
+| 13 | 語頭変化型 | | |
+| 14 | 語頭変化形 | | |
+| 15 | 語末変化型 | | |
+| 16 | 語末変化形 | | |
+
 ## Tokenizing text using produced dictionary
 
 You can tokenize text using produced dictionary with `lindera` command:
@@ -56,16 +80,3 @@ For more details about `lindera` command, please refer to the following URL:
 
 The API reference is available. Please see following URL:
 - <a href="https://docs.rs/lindera-unidic-builder" target="_blank">Lindera UniDic Builder</a>
-
-## Project links
-
-lindera consists of several projects. The list is following:
-
-- [Lindera](https://github.com/lindera-morphology/lindera)
-- [Lindera Core](https://github.com/lindera-morphology/lindera-core)
-- [Lindera Dictionary](https://github.com/lindera-morphology/lindera-dictionary)
-- [Lindera IPADIC](https://github.com/lindera-morphology/lindera-ipadic)
-- [lindera IPADIC Builder](https://github.com/lindera-morphology/lindera-ipadic-builder)
-- [lindera IPADIC NEologd Builder](https://github.com/lindera-morphology/lindera-ipadic-neologd-builder)
-- [lindera UniDic Builder](https://github.com/lindera-morphology/lindera-unidic-builder)
-- [Lindera CLI](https://github.com/lindera-morphology/lindera-cli)

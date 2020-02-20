@@ -34,6 +34,30 @@ Building a dictionary with `lindera-unidic` command:
 % ./bin/lindera-unidic ./unidic-mecab-2.1.2_src ./lindera-unidic-2.1.2
 ```
 
+## Dictionary format
+
+Refer to the [manual](ftp://ftp.jaist.ac.jp/pub/sourceforge.jp/unidic/57618/unidic-mecab.pdf) for details on the unidic-mecab dictionary format and part-of-speech tags.
+
+| Index | Name (Japanese) | Name (English) | Notes |
+| --- | --- | --- | --- |
+| 0 | 品詞大分類 | | |
+| 1 | 品詞中分類 | | |
+| 2 | 品詞小分類 | | |
+| 3 | 品詞細分類 | | |
+| 4 | 活用型 | | |
+| 5 | 活用形 | | |
+| 6 | 語彙素読み | | |
+| 7 | 語彙素（語彙素表記 + 語彙素細分類） | Lexeme | |
+| 8 | 書字形出現形 | | |
+| 9 | 発音形出現形 | | |
+| 10 | 書字形基本形 | | |
+| 11 | 発音形基本形 | | |
+| 12 | 語種 | | |
+| 13 | 語頭変化型 | | |
+| 14 | 語頭変化形 | | |
+| 15 | 語末変化型 | | |
+| 16 | 語末変化形 | | |
+
 ## Tokenizing text using produced dictionary
 
 You can tokenize text using produced dictionary with `lindera` command:

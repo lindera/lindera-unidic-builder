@@ -10,13 +10,15 @@ use std::{fs, u32};
 use bincode;
 use byteorder::ByteOrder;
 use byteorder::{LittleEndian, WriteBytesExt};
+use csv::StringRecord;
 use encoding::all::UTF_16LE;
 use encoding::{DecoderTrap, Encoding};
+use glob::glob;
 use lindera_core::core::character_definition::{
     CategoryData, CategoryId, CharacterDefinitions, LookupTable,
 };
 use lindera_core::core::unknown_dictionary::UnknownDictionary;
-use lindera_core::core::word_entry::{WordDetail, WordEntry, WordId};
+use lindera_core::core::word_entry::{WordEntry, WordId};
 use lindera_fst::MapBuilder;
 
 #[derive(Debug)]
@@ -44,63 +46,6 @@ impl From<ParseIntError> for ParsingError {
     }
 }
 
-#[derive(Debug)]
-pub struct CSVRow<'a> {
-    surface_form: &'a str,
-    left_id: u32,
-    right_id: u32,
-    word_cost: i32,
-
-    pos_level1: &'a str,
-    pos_level2: &'a str,
-    pos_level3: &'a str,
-    pos_level4: &'a str,
-
-    pub conjugation_type: &'a str,
-    pub conjugate_form: &'a str,
-
-    pub base_form: &'a str,
-    pub reading: &'a str,
-    pronunciation: &'a str,
-}
-
-impl<'a> CSVRow<'a> {
-    fn from_line(line: &'a String) -> CSVRow<'a> {
-        let fields: Vec<_> = line.split(",").collect();
-        let _word_cost = i32::from_str(&fields[3]).expect("failed to parse wordost");
-        CSVRow {
-            surface_form: &fields[0],
-            left_id: u32::from_str(&fields[1]).expect("failed to parse left_id"),
-            right_id: u32::from_str(&fields[2]).expect("failed to parse right_id"),
-            word_cost: i32::from_str(&fields[3]).expect("failed to parse wordost"),
-
-            pos_level1: &fields[4],
-            pos_level2: &fields[5],
-            pos_level3: &fields[6],
-            pos_level4: &fields[7],
-
-            conjugation_type: &fields[8],
-            conjugate_form: &fields[9],
-
-            base_form: &fields[14],
-            reading: if &fields[13].len() > &0 {
-                &fields[13]
-            } else {
-                &fields[0]
-            },
-            pronunciation: if &fields[13].len() > &0 {
-                &fields[13]
-            } else {
-                &fields[13]
-            },
-        }
-    }
-}
-
-fn filenames() -> Vec<&'static str> {
-    return vec!["lex.csv"];
-}
-
 fn read_mecab_file(dir: &str, filename: &'static str) -> Result<String, ParsingError> {
     let path = Path::new(dir).join(Path::new(filename));
     let mut input_read = File::open(path)?;
@@ -113,81 +58,83 @@ fn read_mecab_file(dir: &str, filename: &'static str) -> Result<String, ParsingE
 
 fn build_dict(input_dir: &str, output_dir: &str) -> Result<(), ParsingError> {
     println!("BUILD DICT");
-    let files_data: Vec<String> = filenames()
-        .iter()
-        .map(|filename| read_mecab_file(input_dir, filename))
-        .collect::<Result<Vec<String>, ParsingError>>()?;
-    println!("  - read files");
-    let lines: Vec<String> = files_data
-        .iter()
-        .flat_map(|file_data: &String| file_data.lines().map(|line| line.to_string()))
-        .map(|line| {
-            line.chars()
-                .map(|c| {
-                    if c == '―' {
-                        // yeah for EUC_JP and ambiguous unicode 8012 vs 8013
-                        return '—';
-                    } else if c == '～' {
-                        // same bullshit as above between for 12316 vs 65374
-                        return '〜';
-                    } else {
-                        return c;
-                    }
-                })
-                .collect::<String>()
-        })
-        .collect();
-    let mut rows: Vec<CSVRow> = lines.iter().map(|line| CSVRow::from_line(line)).collect();
-    println!("  - parsed csv");
-    rows.sort_by_key(|row| row.surface_form.clone());
-    println!("  - sorted csv");
 
-    let wtr_fst = io::BufWriter::new(File::create(
-        Path::new(output_dir).join(Path::new("dict.fst")),
-    )?);
-    let mut wtr_vals = io::BufWriter::new(File::create(
-        Path::new(output_dir).join(Path::new("dict.vals")),
-    )?);
+    let mut filenames: Vec<String> = Vec::new();
+    for entry in glob(format!("{}/*.csv", input_dir).as_str()).expect("Failed to read glob pattern")
+    {
+        match entry {
+            Ok(path) => {
+                filenames.push(path.file_name().unwrap().to_str().unwrap().to_string());
+            }
+            Err(e) => return Err(ParsingError::ContentError(format!("{}", e))),
+        }
+    }
+
+    let mut rows: Vec<StringRecord> = Vec::new();
+    for filename in filenames {
+        println!("reading csv: {}", filename);
+
+        let mut rdr = csv::ReaderBuilder::new()
+            .has_headers(false)
+            .from_path(Path::new(input_dir).join(Path::new(filename.as_str())))
+            .unwrap();
+
+        for result in rdr.records() {
+            let record = result.unwrap();
+            rows.push(record);
+        }
+    }
+
+    println!("sorting entries");
+    rows.sort_by_key(|row| row[0].to_string().clone());
+
+    let wtr_fst = io::BufWriter::new(
+        File::create(Path::new(output_dir).join(Path::new("dict.fst"))).unwrap(),
+    );
+    let mut wtr_vals = io::BufWriter::new(
+        File::create(Path::new(output_dir).join(Path::new("dict.vals"))).unwrap(),
+    );
 
     let mut word_entry_map: BTreeMap<String, Vec<WordEntry>> = BTreeMap::new();
 
     for (row_id, row) in rows.iter().enumerate() {
-        if row.word_cost == 3978 {
-            println!(
-                "{} -> {}",
-                row.surface_form,
-                row.surface_form.chars().next().unwrap() as u32
-            );
-        }
         word_entry_map
-            .entry(row.surface_form.to_string())
+            .entry(row[0].to_string())
             .or_insert_with(Vec::new)
             .push(WordEntry {
                 word_id: WordId(row_id as u32),
-                word_cost: row.word_cost as i16,
-                cost_id: row.left_id as u16,
+                word_cost: i16::from_str(row[3].trim()).unwrap(),
+                cost_id: u16::from_str(row[1].trim()).unwrap(),
             });
     }
 
-    let mut wtr_words = io::BufWriter::new(File::create(
-        Path::new(output_dir).join(Path::new("dict.words")),
-    )?);
-    let mut wtr_words_idx = io::BufWriter::new(File::create(
-        Path::new(output_dir).join(Path::new("dict.wordsidx")),
-    )?);
+    let mut wtr_words = io::BufWriter::new(
+        File::create(Path::new(output_dir).join(Path::new("dict.words"))).unwrap(),
+    );
+    let mut wtr_words_idx = io::BufWriter::new(
+        File::create(Path::new(output_dir).join(Path::new("dict.wordsidx"))).unwrap(),
+    );
     let mut words_buffer = Vec::new();
     for row in rows.iter() {
-        let word = WordDetail {
-            pos_level1: row.pos_level1.to_string(),
-            pos_level2: row.pos_level2.to_string(),
-            pos_level3: row.pos_level3.to_string(),
-            pos_level4: row.pos_level4.to_string(),
-            conjugation_type: row.conjugation_type.to_string(),
-            conjugate_form: row.conjugate_form.to_string(),
-            base_form: row.base_form.to_string(),
-            reading: row.reading.to_string(),
-            pronunciation: row.pronunciation.to_string(),
-        };
+        let word = vec![
+            row[4].to_string(),
+            row[5].to_string(),
+            row[6].to_string(),
+            row[7].to_string(),
+            row[8].to_string(),
+            row[9].to_string(),
+            row[10].to_string(),
+            row[11].to_string(),
+            row[12].to_string(),
+            row[13].to_string(),
+            row[14].to_string(),
+            row[15].to_string(),
+            row[16].to_string(),
+            row[17].to_string(),
+            row[18].to_string(),
+            row[19].to_string(),
+            row[20].to_string(),
+        ];
         let offset = words_buffer.len();
         wtr_words_idx.write_u32::<LittleEndian>(offset as u32)?;
         bincode::serialize_into(&mut words_buffer, &word).unwrap();
@@ -199,7 +146,7 @@ fn build_dict(input_dir: &str, output_dir: &str) -> Result<(), ParsingError> {
 
     let mut id = 0u64;
 
-    println!("  - building fst");
+    println!("building fst");
     let mut fst_build = MapBuilder::new(wtr_fst).unwrap();
     for (key, word_entries) in &word_entry_map {
         let len = word_entries.len() as u64;
@@ -209,14 +156,15 @@ fn build_dict(input_dir: &str, output_dir: &str) -> Result<(), ParsingError> {
         id += len;
     }
     fst_build.finish().unwrap();
-    println!("  - built fst");
+
+    println!("building values");
     for word_entries in word_entry_map.values() {
         for word_entry in word_entries {
             word_entry.serialize(&mut wtr_vals)?;
         }
     }
-    wtr_vals.flush()?;
-    println!(" - built values");
+    wtr_vals.flush().unwrap();
+
     Ok(())
 }
 

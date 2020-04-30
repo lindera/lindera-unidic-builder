@@ -1,11 +1,9 @@
 BIN_DIR ?= ./bin
 UNIDIC_VERSION ?= 2.1.2
 SOURCE_URL ?= https://unidic.ninjal.ac.jp/unidic_archive/cwj/$(UNIDIC_VERSION)/unidic-mecab-$(UNIDIC_VERSION)_src.zip
-VERSION ?=
+LINDERA_UNIDIC_BUILDER_VERSION ?= $(shell cargo metadata --no-deps --format-version=1 | jq -r '.packages[] | select(.name=="lindera-unidic-builder") | .version')
 
-ifeq ($(VERSION),)
-  VERSION = $(shell cargo metadata --no-deps --format-version=1 | jq -r '.packages[] | select(.name=="lindera-unidic-builder") | .version')
-endif
+.DEFAULT_GOAL := build
 
 clean:
 	rm -rf $(BIN_DIR)
@@ -37,3 +35,12 @@ lindera-unidic: build unidic-mecab-extract
 
 test:
 	cargo test
+
+tag:
+	git tag v$(LINDERA_UNIDIC_BUILDER_VERSION)
+	git push origin v$(LINDERA_UNIDIC_BUILDER_VERSION)
+
+publish:
+ifeq ($(shell cargo show --json lindera-unidic-builder | jq -r '.versions[].num' | grep $(LINDERA_UNIDIC_BUILDER_VERSION)),)
+	cargo package && cargo publish
+endif

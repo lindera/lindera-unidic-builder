@@ -6,7 +6,7 @@ UniDic builder for [Lindera](https://github.com/lindera-morphology/lindera). Thi
 
 ## Install
 
-```
+```shell script
 % cargo install lindera-unidic-builder
 ```
 
@@ -17,8 +17,8 @@ The following products are required to build:
 - Rust >= 1.39.0
 - make >= 3.81
 
-```text
-% make lindera-unidic
+```shell script
+% cargo build --release
 ```
 
 ## Dictionary version
@@ -30,8 +30,11 @@ See [detail of UniDic](https://unidic.ninjal.ac.jp/) .
 
 Building a dictionary with `lindera-unidic` command:
 
-```
-% ./bin/lindera-unidic ./unidic-mecab-2.1.2_src ./lindera-unidic-2.1.2
+```shell script
+% UNIDIC_VERSION=2.1.2
+% curl -L -O "https://unidic.ninjal.ac.jp/unidic_archive/cwj/${UNIDIC_VERSION}/unidic-mecab-${UNIDIC_VERSION}_src.zip"
+% unzip ./unidic-mecab-${UNIDIC_VERSION}_src.zip
+% lindera-unidic ./unidic-mecab-${UNIDIC_VERSION}_src ./lindera-unidic-${UNIDIC_VERSION}
 ```
 
 ## Dictionary format
@@ -62,8 +65,11 @@ Refer to the [manual](ftp://ftp.jaist.ac.jp/pub/sourceforge.jp/unidic/57618/unid
 
 You can tokenize text using produced dictionary with `lindera` command:
 
-```
+```shell script
 % echo "羽田空港限定トートバッグ" | lindera -d ./lindera-unidic-2.1.2
+```
+
+```text
 羽田    名詞,固有名詞,人名,姓,*,*,羽田,ハタ,ハタ
 空港    名詞,普通名詞,一般,*,*,*,空港,クーコー,クーコー
 限定    名詞,普通名詞,サ変可能,*,*,*,限定,ゲンテー,ゲンテー
@@ -74,7 +80,7 @@ EOS
 
 For more details about `lindera` command, please refer to the following URL:
 
-- [Lindera CLI](https://github.com/lindera-morphology/lindera-cli)
+- [Lindera CLI](https://github.com/lindera-morphology/lindera/lindera-cli)
 
 ## API reference
 

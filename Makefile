@@ -1,6 +1,5 @@
 BIN_DIR ?= ./bin
 UNIDIC_VERSION ?= 2.1.2
-SOURCE_URL ?= https://unidic.ninjal.ac.jp/unidic_archive/cwj/$(UNIDIC_VERSION)/unidic-mecab-$(UNIDIC_VERSION)_src.zip
 LINDERA_UNIDIC_BUILDER_VERSION ?= $(shell cargo metadata --no-deps --format-version=1 | jq -r '.packages[] | select(.name=="lindera-unidic-builder") | .version')
 
 .DEFAULT_GOAL := build
@@ -14,27 +13,13 @@ clean:
 format:
 	cargo fmt
 
+test:
+	cargo test
+
 build:
 	cargo build --release
 	mkdir -p $(BIN_DIR)
 	cp -p ./target/release/lindera-unidic $(BIN_DIR)
-
-unidic-mecab-download:
-ifeq ($(wildcard ./unidic-mecab-$(UNIDIC_VERSION)_src.zip),)
-	curl -L -O "$(SOURCE_URL)"
-endif
-
-unidic-mecab-extract: unidic-mecab-download
-ifeq ($(wildcard ./unidic-mecab-$(UNIDIC_VERSION)_src/*),)
-	unzip ./unidic-mecab-$(UNIDIC_VERSION)_src.zip
-endif
-
-lindera-unidic: build unidic-mecab-extract
-	$(BIN_DIR)/lindera-unidic ./unidic-mecab-$(UNIDIC_VERSION)_src ./lindera-unidic-$(UNIDIC_VERSION)
-	tar -cvjf ./lindera-unidic-$(UNIDIC_VERSION).tar.bz2 ./lindera-unidic-$(UNIDIC_VERSION)
-
-test:
-	cargo test
 
 tag:
 	git tag v$(LINDERA_UNIDIC_BUILDER_VERSION)

@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Update lindera 0.6.0
 - Update 2018 edition #9 @johtani
 
 ## 0.3.4 (2020-05-22)

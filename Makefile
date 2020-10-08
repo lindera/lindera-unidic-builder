@@ -26,6 +26,6 @@ tag:
 	git push origin v$(LINDERA_UNIDIC_BUILDER_VERSION)
 
 publish:
-ifeq ($(shell cargo show --json lindera-unidic-builder | jq -r '.versions[].num' | grep $(LINDERA_UNIDIC_BUILDER_VERSION)),)
+ifeq ($(shell curl -s -XGET https://crates.io/api/v1/crates/lindera-unidic-builder | jq -r '.versions[].num' | grep $(LINDERA_UNIDIC_BUILDER_VERSION)),)
 	cargo package && cargo publish
 endif

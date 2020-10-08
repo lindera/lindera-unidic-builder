@@ -15,7 +15,6 @@ UniDic builder for [Lindera](https://github.com/lindera-morphology/lindera). Thi
 The following products are required to build:
 
 - Rust >= 1.46.0
-- make >= 3.81
 
 ```shell script
 % cargo build --release

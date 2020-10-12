@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
+- Upgrade dependencies #16 @mosuka
 - Update yada 0.4.0 #15 @johtani
 
 ## 0.6.0 (2020-10-08)

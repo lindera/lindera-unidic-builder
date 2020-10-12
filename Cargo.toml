@@ -25,7 +25,7 @@ encoding = "0.2"
 glob = "0.3"
 yada = "0.4"
 
-lindera-core = "0.6"
+lindera-core = "0.7"
 
 [[bin]]
 name = "lindera-unidic"

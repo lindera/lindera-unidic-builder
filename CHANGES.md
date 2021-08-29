@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## unreleased
+- Apply core 0.8.0 #22 @johtani 
+
 ## 0.7.1 (2020-10-15)
 - Bump up version to 0.7.1 #20 @mosuka
 - Automate release tasks #19 @mosuka

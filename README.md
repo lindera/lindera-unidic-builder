@@ -31,9 +31,9 @@ Building a dictionary with `lindera-unidic` command:
 
 ```shell script
 % UNIDIC_VERSION=2.1.2
-% curl -L -O "https://unidic.ninjal.ac.jp/unidic_archive/cwj/${UNIDIC_VERSION}/unidic-mecab-${UNIDIC_VERSION}_src.zip"
+% curl -L -O "https://ccd.ninjal.ac.jp/unidic_archive/cwj/${UNIDIC_VERSION}/unidic-mecab-${UNIDIC_VERSION}_src.zip"
 % unzip ./unidic-mecab-${UNIDIC_VERSION}_src.zip
-% lindera-unidic ./unidic-mecab-${UNIDIC_VERSION}_src ./lindera-unidic-${UNIDIC_VERSION}
+% lindera-unidic-builder -s ./unidic-mecab-${UNIDIC_VERSION}_src -d ./lindera-unidic-${UNIDIC_VERSION}
 ```
 
 ## Dictionary format

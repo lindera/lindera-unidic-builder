@@ -278,7 +278,7 @@ impl DictionaryBuilder for UnidicBuilder {
         let da_bytes = DoubleArrayBuilder::build(&keyset).ok_or_else(|| {
             LinderaErrorKind::Io.with_error(anyhow::anyhow!("DoubleArray build error."))
         })?;
-        
+
         compress_write(&da_bytes, COMPRESS_ALGORITHM, &mut wtr_da)?;
 
         let mut vals_buffer = Vec::new();
@@ -355,7 +355,6 @@ impl DictionaryBuilder for UnidicBuilder {
         unimplemented!()
     }
 }
-
 
 #[cfg(feature = "compress")]
 fn compress_write<W: Write>(

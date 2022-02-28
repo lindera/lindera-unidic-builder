@@ -1,12 +1,7 @@
 [package]
 name = "lindera-unidic-builder"
-version = "0.8.0"
-authors = [
-    "Paul Masurel <paul.masurel@gmail.com>",
-    "Minoru Osuka <minoru.osuka@gmail.com>",
-    "Jun Ohtani <johtani@gmail.com>"
-    ]
-edition = "2018"
+version = "0.10.0"
+edition = "2021"
 description = "A Japanese morphological dictionary builder for UniDic."
 documentation = "https://docs.rs/lindera-unidic-builder"
 homepage = "https://github.com/lindera-morphology/lindera-unidic-builder"
@@ -16,18 +11,25 @@ keywords = ["japanese", "morphological", "dictionary", "builder", "unidic"]
 categories = ["text-processing"]
 license = "MIT"
 
+[features]
+compress = ["lindera-compress"]
+
 [dependencies]
 anyhow = "1.0"
 bincode = "1.3"
 byteorder = "1.4"
-clap = "2.33"
+clap = { version = "3.1", features = ["derive"] }
 csv = "1.1"
 encoding = "0.2"
+env_logger = "0.9"
 glob = "0.3"
-yada = "0.4"
+log = "0.4"
+yada = "0.5"
 
-lindera-core = "0.8.0"
+lindera-core = "0.10.0"
+lindera-decompress = "0.10.0"
+lindera-compress = { version = "0.10.0", optional = true }
 
 [[bin]]
-name = "lindera-unidic"
+name = "lindera-unidic-builder"
 path = "src/main.rs"

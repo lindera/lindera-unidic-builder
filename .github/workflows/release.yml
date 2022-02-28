@@ -12,11 +12,11 @@ jobs:
     strategy:
       matrix:
         target:
-          - x86_64-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
           - x86_64-pc-windows-msvc
           - x86_64-apple-darwin
         include:
-          - target: x86_64-unknown-linux-musl
+          - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
           - target: x86_64-pc-windows-msvc
             os: windows-latest
@@ -50,15 +50,15 @@ jobs:
       - name: Build for Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          zip --junk-paths lindera-unidic-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-unidic
+          zip --junk-paths lindera-unidic-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-unidic-builder
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
         run: |
-          7z a lindera-unidic-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-unidic.exe
+          7z a lindera-unidic-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-unidic-builder.exe
       - name: Build for OSX
         if: matrix.os == 'macos-latest'
         run: |
-          zip --junk-paths lindera-unidic-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-unidic
+          zip --junk-paths lindera-unidic-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-unidic-builder
       - uses: actions/upload-artifact@v1
         with:
           name: build-${{ matrix.target }}
@@ -89,7 +89,7 @@ jobs:
     strategy:
       matrix:
         target:
-          - x86_64-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
           - x86_64-pc-windows-msvc
           - x86_64-apple-darwin
     name: Upload Release

@@ -2,7 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## unreleased
+## 0.10.0 (2022-02-27)
+- Update lindera to 0.10.0 #25
 - Apply core 0.8.0 #22 @johtani 
 
 ## 0.7.1 (2020-10-15)

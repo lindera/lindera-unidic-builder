@@ -285,7 +285,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3734c28e556c9b9abfc30fc8a6441f355eb66c2e1be8cd10bcfd03402d654af8"
 dependencies = [
  "anyhow",
- "lindera-decompress",
+ "lindera-decompress 0.10.0",
  "lzma-rs",
  "rust-lzma",
 ]
@@ -319,6 +319,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "lindera-decompress"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fa0319efe593e0dcfb2f951247b21522c0d5ac058ddc47ba1702437d12937977"
+dependencies = [
+ "anyhow",
+ "bincode",
+ "lzma-rs",
+ "serde",
+]
+
+[[package]]
 name = "lindera-unidic-builder"
 version = "0.10.0"
 dependencies = [
@@ -332,7 +344,7 @@ dependencies = [
  "glob",
  "lindera-compress",
  "lindera-core",
- "lindera-decompress",
+ "lindera-decompress 0.11.1",
  "log",
  "yada",
 ]
